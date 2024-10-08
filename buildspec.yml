@@ -1,0 +1,21 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 14
+    commands:
+      - npm install
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker build -t my-app .
+      - echo Pushing the Docker image...
+      - $(aws ecr get-login --no-include-email --region YOUR_AWS_REGION)
+      - docker tag my-app:latest YOUR_ACCOUNT_ID.dkr.ecr.YOUR_AWS_REGION.amazonaws.com/my-app-repo:latest
+      - docker push YOUR_ACCOUNT_ID.dkr.ecr.YOUR_AWS_REGION.amazonaws.com/my-app-repo:latest
+
+artifacts:
+  files:
+    - '**/*'
